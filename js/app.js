@@ -4,6 +4,7 @@ function iniciarApp () {
     const selectCategorias = document.querySelector('#categorias');
     selectCategorias.addEventListener('change', seleccionarCategoria)
 
+    const resultado = document.querySelector('#resultado')
 
     obtenerCategorias();
 
@@ -11,7 +12,8 @@ function iniciarApp () {
         const url = 'https://www.themealdb.com/api/json/v1/1/categories.php';
         fetch(url)
         .then(resp => resp.json())    
-        .then(res => mostrarCategorias(res.categories))
+        .then(res => mostrarCategorias(res.categories) )
+        
     }
 
     function mostrarCategorias(categorias = []) {
@@ -33,10 +35,12 @@ function iniciarApp () {
     }
 
     function mostrarRecetas(recetas = []) {
+
+        limpiarHtml (resultado)
         //iterando en los resultados
         recetas.forEach(receta => {
-
-            const { idMeal, strMeal, strMealThumb } = receta
+            console.log(receta)
+            const { idMeal, strMeal, strMealThumb } = receta;
 
             const recetaContenedor = document.createElement('DIV');
             recetaContenedor.classList.add('col-md-4')
@@ -51,7 +55,32 @@ function iniciarApp () {
             
             const recetaCardBody = document.createElement('DIV')
             recetaCardBody.classList.add('card-body')
+
+            const recetaHeading = document.createElement('H3')
+            recetaHeading.classList.add('card-title', 'mb-3')
+            recetaHeading.textContent = strMeal;
+
+            const recetaButton = document.createElement('BUTTON')
+            recetaButton.classList.add('btn','btn-danger','w-100')
+            recetaButton.textContent = 'Ver receta';
+
+            //inyectando el codigo en el HTML
+            recetaCardBody.appendChild(recetaHeading)
+            recetaCardBody.appendChild(recetaButton)
+
+            recetaCard.appendChild(recetaImagen)
+            recetaCard.appendChild(recetaCardBody)
+
+            recetaContenedor.appendChild(recetaCard)
+
+            resultado.appendChild(recetaContenedor)
         })
+    }
+
+    function limpiarHtml (select) {
+        while(select.firstChild) {
+            select.removeChild(select.firstChild)
+        }
     }
 }
 
